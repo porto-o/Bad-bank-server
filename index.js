@@ -1,11 +1,34 @@
-const express = require("express");
-const app = express();
-const customer = require("./routes/customer.js");
+const app = require('./app.js');
+const dotenv = require('dotenv');
+const connectDB = require('./config/connectDB.js');
 
-app.use(express.json());
+// Enable .env file to be use
+dotenv.config();
 
-app.set('appName', 'BadBank server');
+// getting the port from .env file
+const port = process.env.PORT || 4000;
 
-app.use('/customer', customer)
+// Connect to database
+connectDB();
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+})
+
+
+// dotenv.config();
+
+// app.use(express.json());
+
+// // import port from .env file
+
+// const port = process.env.PORT || 4000;
+
+// connectDB()
+
+// app.set('appName', 'BadBank server');
+
+// app.use('/customer', middleware, customer)
+
+// app.listen(port, () => console.log(`Server running on port ${port}`));

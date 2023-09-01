@@ -6,7 +6,7 @@ router.post('/signup', (req, res) => {
     res.send('sign up');
 })
 
-router.post('/login', (req, res) => {
+router.post('/signin', (req, res) => {
     console.log(req.body);
     res.send('login');
 })
