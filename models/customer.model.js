@@ -16,6 +16,21 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    transactions: [{
+        type: {
+            type: String, // "deposit", "withdrawal", etc.
+            required: true,
+        },
+        amount: {
+            type: Number,
+            required: true,
+        },
+        // You can add other properties specific to each transaction
+    }],
+    balance: {
+        type: Number,
+        default: 0,
+    }
 }, {
     timestamps: true
 });

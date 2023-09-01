@@ -27,6 +27,8 @@ const signUp = async (req, res) => {
             id: savedCustomer._id,
             username: savedCustomer.username,
             email: savedCustomer.email,
+            transactions: savedCustomer.transactions,
+            balance: savedCustomer.balance,
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -68,14 +70,8 @@ const signOut = (req, res) => {
     return res.sendStatus(200);
 };
 
-const myHistory = (req, res) => {
-    console.log(req.user)
-    res.send('myHistory')
-}
-
 module.exports = {
     signUp,
     signIn,
-    signOut,
-    myHistory
+    signOut
 };
