@@ -1,9 +1,14 @@
 const Customer = require("../models/customer.model.js");
 const bcrypt = require("bcryptjs");
 const createAccessToken = require("../libs/jwt.js");
+const jwt = require("jsonwebtoken");
 
 const signUp = async (req, res) => {
     const { username, email, password } = req.body;
+
+    const userFound = await Customer.findOne({ email });
+    if (userFound)
+        return res.status(400).json(["Email already exists"]);
 
     // encrypt password
     const hashPassword = await bcrypt.hash(password, 10);
@@ -21,6 +26,7 @@ const signUp = async (req, res) => {
 
         // create a token and send it to the client
         const token = await createAccessToken({ id: savedCustomer._id });
+        // save it in the cookie.token
         res.cookie("token", token);
 
         res.json({
@@ -30,6 +36,7 @@ const signUp = async (req, res) => {
             transactions: savedCustomer.transactions,
             balance: savedCustomer.balance,
         });
+        
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -57,6 +64,8 @@ const signIn = async (req, res) => {
             id: customerFound._id,
             username: customerFound.username,
             email: customerFound.email,
+            balance: customerFound.balance,
+            transactions: customerFound.transactions,
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -70,8 +79,29 @@ const signOut = (req, res) => {
     return res.sendStatus(200);
 };
 
+const verifyToken = async (req, res) => {
+    const { token } = req.cookies
+    if (!token) return res.sendStatus(401).json({ message: "Unauthorized" })
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+        if (err) return res.sendStatus(401).json({ message: "Unauthorized" })
+
+        const customerFound = await Customer.findById(decoded.id)
+        if (!customerFound) return res.sendStatus(401).json({ message: "Unauthorized" })
+
+        res.json({
+            id: customerFound._id,
+            username: customerFound.username,
+            email: customerFound.email,
+            balance: customerFound.balance,
+            transactions: customerFound.transactions,
+        });
+    })
+}
+
 module.exports = {
     signUp,
     signIn,
-    signOut
+    signOut,
+    verifyToken
 };

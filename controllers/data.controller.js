@@ -15,7 +15,10 @@ const getData = async (req, res) => {
 
 const operation = async (req, res) => {
     // this endpoint will return the transaction history for each user
-    const { operation, amount } = req.body;
+    let { operation, amount } = req.body;
+    console.log(amount)
+    // parse the amount to number
+    amount = Number(amount);
 
     const customerFound = await Customer.findById(req.user.id);
 
@@ -26,6 +29,7 @@ const operation = async (req, res) => {
     customerFound.transactions.push({
         type: operation === "withdraw" ? "withdrawal" : "deposit",
         amount: amount,
+        date: Date.now()
     })
 
     // save to the database
@@ -41,6 +45,6 @@ const operation = async (req, res) => {
 
 module.exports = {
     getData,
-    deposit: operation
+    operation
 
 }

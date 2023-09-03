@@ -15,6 +15,7 @@ const customerSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        minlength: 8,
     },
     transactions: [{
         type: {
@@ -25,6 +26,12 @@ const customerSchema = new mongoose.Schema({
             type: Number,
             required: true,
         },
+        date: { 
+            // date in a format like "2021-01-01"
+            type: Date,
+            required: false,
+            default: Date.now,
+        }
         // You can add other properties specific to each transaction
     }],
     balance: {
