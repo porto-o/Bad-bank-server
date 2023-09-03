@@ -37,7 +37,8 @@ const operation = async (req, res) => {
     // return the json of transacitons
     res.json({
         transactions: customerFound.transactions,
-        balance: customerFound.balance
+        balance: customerFound.balance,
+        message: "Transaction successful"
     })
 
 
