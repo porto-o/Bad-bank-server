@@ -10,13 +10,25 @@ const app = express();
 dotenv.config();
 
 // cors must allow all origins to access the server
+const whitelist = [process.env.FRONT_URI]
+const corsOptions = {
+    origin: (origin, callback) => {
+        console.log(origin);
+        if (whitelist.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+app.use(cors(corsOptions, {
+    credentials: true,
+    cookies: true
+}))
+
+// midleware to parse the req. body to a json object
 app.use(cookieParser());
 
-app.use(cors({
-    origin: 'https://portobank.netlify.app',
-    credentials: true
-}));
-// midleware to parse the req. body to a json object
 app.use(express.json());
 // to parse cookies
 
