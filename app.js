@@ -10,6 +10,7 @@ const app = express();
 dotenv.config();
 
 // cors must allow all origins to access the server
+app.use(cookieParser());
 
 app.use(cors({
     origin: 'https://portobank.netlify.app',
@@ -18,7 +19,6 @@ app.use(cors({
 // midleware to parse the req. body to a json object
 app.use(express.json());
 // to parse cookies
-app.use(cookieParser());
 
 // use morgan module to watch requests and the responses
 app.use(morgan('dev'));
