@@ -59,7 +59,7 @@ const signIn = async (req, res) => {
         // create a token and send it to the client
         const token = await createAccessToken({ id: customerFound._id });
         res.cookie("token", token);
-
+        console.log("no me sale")
         res.json({
             id: customerFound._id,
             username: customerFound.username,
