@@ -12,7 +12,7 @@ dotenv.config();
 // cors must allow all origins to access the server
 
 app.use(cors({
-    origin: 'https://portobank.netlify.app/',
+    origin: 'https://portobank.netlify.app',
     credentials: true
 }));
 // midleware to parse the req. body to a json object
