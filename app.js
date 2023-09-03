@@ -10,7 +10,6 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-    origin: process.env.FRONT_URI,
     credentials: true,
 }));
 // midleware to parse the req. body to a json object
