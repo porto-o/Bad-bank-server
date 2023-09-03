@@ -9,8 +9,11 @@ const cors = require('cors');
 const app = express();
 dotenv.config();
 
+// cors must allow all origins to access the server
+
 app.use(cors({
-    credentials: true,
+    origin: '*',
+    credentials: true
 }));
 // midleware to parse the req. body to a json object
 app.use(express.json());
