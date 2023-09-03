@@ -10,6 +10,14 @@ const app = express();
 dotenv.config();
 
 // cors must allow all origins to access the server
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://portobank.netlify.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Set credentials to true for requests with credentials mode 'include'
+    next();
+});
+
 const whitelist = [process.env.FRONT_URI]
 const corsOptions = {
     origin: (origin, callback) => {
