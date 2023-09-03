@@ -27,7 +27,11 @@ const signUp = async (req, res) => {
         // create a token and send it to the client
         const token = await createAccessToken({ id: savedCustomer._id });
         // save it in the cookie.token
-        res.cookie("token", token);
+        res.cookie("token", token,
+            {
+                sameSite: 'none',
+                secure: true,
+            });
 
         res.json({
             id: savedCustomer._id,
@@ -36,7 +40,7 @@ const signUp = async (req, res) => {
             transactions: savedCustomer.transactions,
             balance: savedCustomer.balance,
         });
-        
+
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -58,7 +62,10 @@ const signIn = async (req, res) => {
     try {
         // create a token and send it to the client
         const token = await createAccessToken({ id: customerFound._id });
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: 'none',
+            secure: true,
+        });
         console.log("no me sale")
         res.json({
             id: customerFound._id,
@@ -74,6 +81,8 @@ const signIn = async (req, res) => {
 
 const signOut = (req, res) => {
     res.cookie("token", "", {
+        sameSite: 'none',
+        secure: true,
         expires: new Date(0),
     });
     return res.sendStatus(200);
