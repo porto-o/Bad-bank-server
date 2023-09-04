@@ -31,6 +31,12 @@ const customerSchema = new mongoose.Schema({
             type: Date,
             required: false,
             default: Date.now,
+        },
+        email: {
+            type: String,
+            required: false,
+            trim: true,
+
         }
         // You can add other properties specific to each transaction
     }],

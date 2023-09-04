@@ -44,8 +44,64 @@ const operation = async (req, res) => {
 
 }
 
+const transfer = async (req, res) => {
+    // search a user to transfer with the email
+    // 
+    let { email, amount } = req.body;
+    amount = Number(amount);
+
+
+    const customerFound = await Customer.findById(req.user.id);
+
+    if (!customerFound) return res.status(404).json({ message: "User not found" })
+
+    // check if the user has enough money
+
+    if (customerFound.balance < amount) return res.status(400).json({ message: "Insufficient funds" })
+
+    // check if the email is valid
+    const userFound = await Customer.findOne({ email });
+
+    if (!userFound) return res.status(404).json({ message: "User not found" })
+
+    // check if the user is the same as the one logged in
+
+    if (userFound._id.toString() === customerFound._id.toString()) return res.status(400).json({ message: "You can't transfer money to yourself" })
+    // transfer the money
+    // convert amount to number
+    customerFound.balance -= amount;
+    userFound.balance += amount;
+    // save to the database
+
+    // add to the transaction history of both users
+    customerFound.transactions.push({
+        type: "transfer",
+        amount: amount,
+        date: Date.now(),
+        email: email
+    })
+
+    userFound.transactions.push({
+        type: "received",
+        amount: amount,
+        date: Date.now(),
+        email: customerFound.email
+    })
+
+    await customerFound.save();
+    await userFound.save();
+    // return the json of transacitons
+    res.json({
+        transactions: customerFound.transactions,
+        balance: customerFound.balance,
+        message: "Transaction successful"
+
+    })
+}
+
 module.exports = {
     getData,
-    operation
+    operation,
+    transfer
 
 }
